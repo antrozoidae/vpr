@@ -6,14 +6,14 @@ from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QFormLayout,
     QLabel, QPushButton, QTableWidget, QTableWidgetItem,
     QHeaderView, QProgressBar, QTextEdit, QMessageBox,
-    QFileDialog, QComboBox
+    QFileDialog, QComboBox, QLineEdit
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from pathlib import Path
 
-from ..core.calculation import CalculationEngine, PrintJob
-from ..pdf.processor import PDFProcessor
-from ..printers.engine import PrintEngine
+from core.calculation import CalculationEngine, PrintJob
+from pdf.processor import PDFProcessor
+from printers.engine import PrintEngine
 
 
 class PrintWorker(QThread):
@@ -289,7 +289,7 @@ class PrintCalcTab(QWidget):
             self.print_worker.cancel()
             
             # Очистка очереди спулера
-            from ..printers.manager import PrinterManager
+            from printers.manager import PrinterManager
             pm = PrinterManager()
             pm.cancel_print_jobs_by_prefix(PrintEngine.JOB_PREFIX)
             
