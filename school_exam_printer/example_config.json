@@ -1,0 +1,59 @@
+{
+  "letters": ["А", "Б", "В", "Г"],
+  "classes_matrix": {
+    "9": {"А": 25, "Б": 24, "В": 0, "Г": 22},
+    "10": {"А": 28, "Б": 27, "В": 0, "Г": 0},
+    "11": {"А": 30, "Б": 28, "В": 25, "Г": 0}
+  },
+  "subjects": [
+    {
+      "name": "История",
+      "matrix": {
+        "9": {"selected_letters": ["А", "Б", "Г"], "two_parts": true},
+        "10": {"selected_letters": ["А", "Б"], "two_parts": false},
+        "11": {"selected_letters": ["А", "Б", "В"], "two_parts": true}
+      },
+      "files": {
+        "9": {
+          "variant_1": {"part_1": "", "part_2": ""},
+          "variant_2": {"part_1": "", "part_2": ""}
+        },
+        "10": {
+          "variant_1": {"single": ""},
+          "variant_2": {"single": ""}
+        },
+        "11": {
+          "variant_1": {"part_1": "", "part_2": ""},
+          "variant_2": {"part_1": "", "part_2": ""}
+        }
+      }
+    },
+    {
+      "name": "Математика",
+      "matrix": {
+        "9": {"selected_letters": ["А", "Б"], "two_parts": false},
+        "11": {"selected_letters": ["А", "Б", "В"], "two_parts": true}
+      },
+      "files": {
+        "9": {
+          "variant_1": {"single": ""},
+          "variant_2": {"single": ""}
+        },
+        "11": {
+          "variant_1": {"part_1": "", "part_2": ""},
+          "variant_2": {"part_1": "", "part_2": ""}
+        }
+      }
+    }
+  ],
+  "printers": [
+    {"name": "HP LaserJet Pro M404", "enabled": true, "duplex_mode": "long"},
+    {"name": "Canon i-SENSYS MF269", "enabled": false, "duplex_mode": "none"}
+  ],
+  "settings": {
+    "sumatra_path": "C:/Program Files/SumatraPDF/SumatraPDF.exe",
+    "last_config_path": "",
+    "duplex_mode": "long",
+    "temp_dir": "%TEMP%/SchoolExamPrinter"
+  }
+}
