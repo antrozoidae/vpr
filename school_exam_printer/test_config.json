@@ -1,0 +1,41 @@
+{
+  "classes": [
+    {
+      "parallel": 9,
+      "letter": "А",
+      "students": 25
+    },
+    {
+      "parallel": 9,
+      "letter": "Б",
+      "students": 24
+    }
+  ],
+  "subjects": [
+    {
+      "name": "История",
+      "target_classes": [
+        "9А",
+        "9Б"
+      ],
+      "has_two_parts": true,
+      "files": {
+        "variant_1": {
+          "part_1": "",
+          "part_2": ""
+        },
+        "variant_2": {
+          "part_1": "",
+          "part_2": ""
+        }
+      }
+    }
+  ],
+  "printers": [],
+  "settings": {
+    "duplex_mode": "none",
+    "sumatra_path": "",
+    "last_config_path": "",
+    "temp_dir": ""
+  }
+}
