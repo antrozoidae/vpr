@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 
-from ...core.config import AppConfig, PrinterConfig
+from core.config import AppConfig, PrinterConfig
 
 
 class PrintersTab(QWidget):

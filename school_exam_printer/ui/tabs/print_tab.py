@@ -10,9 +10,9 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, pyqtSignal, QThread
 from PyQt6.QtGui import QFont
 
-from ...core.config import AppConfig
-from ...core.calculator import CalculationEngine, PrintTask
-from ...core.printer_engine import PrintEngine, PrintStatus, PrintResult
+from core.config import AppConfig
+from core.calculator import CalculationEngine, PrintTask
+from core.printer_engine import PrintEngine, PrintStatus, PrintResult
 
 
 class PrintWorker(QThread):

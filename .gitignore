@@ -1,1 +1,42 @@
-Nothing should be ignored based on the provided file changes. The only modified file is a Python source file (`school_exam_printer/ui/main_window.py`), which should not be added to .gitignore.
+```gitignore
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+python/
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# Build and distribution artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# Logs
+*.log
+
+# Coverage reports
+.coverage
+htmlcov/
+coverage/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env*
+```
