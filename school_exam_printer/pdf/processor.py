@@ -4,7 +4,7 @@
 import os
 from pathlib import Path
 from typing import List, Optional
-from pypdf import PdfMerger
+from pypdf import PdfReader, PdfWriter
 
 
 class PDFProcessor:
@@ -70,13 +70,15 @@ class PDFProcessor:
         output_path = self.temp_dir / output_name
         
         try:
-            merger = PdfMerger()
+            writer = PdfWriter()
             
             for pdf_path in valid_paths:
-                merger.append(pdf_path)
+                reader = PdfReader(pdf_path)
+                for page in reader.pages:
+                    writer.add_page(page)
             
-            merger.write(output_path)
-            merger.close()
+            with open(output_path, 'wb') as f:
+                writer.write(f)
             
             return str(output_path)
         except Exception as e:
