@@ -2,18 +2,20 @@
 Главное окно приложения.
 """
 import sys
-from PyQt6.QtWidgets import (
-    QMainWindow, QTabWidget, QWidget, QVBoxLayout,
-    QHBoxLayout, QPushButton, QMenuBar, QMenu, QMessageBox,
-    QFileDialog, QApplication
-)
-from PyQt6.QtCore import Qt
+import os
 from pathlib import Path
 
 # Добавляем корень проекта в путь если нужно
 project_root = Path(__file__).parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
+
+from PyQt6.QtWidgets import (
+    QMainWindow, QTabWidget, QWidget, QVBoxLayout,
+    QHBoxLayout, QPushButton, QMenuBar, QMenu, QMessageBox,
+    QFileDialog, QApplication
+)
+from PyQt6.QtCore import Qt
 
 from ui.classes_tab import ClassesTab
 from ui.subjects_tab import SubjectsTab
@@ -160,7 +162,7 @@ class MainWindow(QMainWindow):
             print(f"Ошибка автосохранения: {e}")
         
         # Очистка временных файлов
-        from ui.pdf.processor import PDFProcessor
+        from pdf.processor import PDFProcessor
         pdf_processor = PDFProcessor(self.config.get_temp_dir())
         pdf_processor.cleanup_temp_files()
         

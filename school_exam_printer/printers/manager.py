@@ -61,7 +61,12 @@ class PrinterManager:
             return "ready"
         
         try:
-            handle = self.win32print.OpenPrinter(printer_name)
+            # Очистка имени для API
+            clean_name = printer_name.strip()
+            if not clean_name:
+                return "unknown"
+            
+            handle = self.win32print.OpenPrinter(clean_name)
             if handle:
                 try:
                     printer_info = self.win32print.GetPrinter(handle, 2)
@@ -85,7 +90,7 @@ class PrinterManager:
             else:
                 return "unknown"
         except Exception as e:
-            print(f"Ошибка получения статуса принтера {printer_name}: {e}")
+            # Принтер может быть виртуальным, сетевым офлайн или имя не совпадает
             return "unknown"
     
     def is_printer_ready(self, printer_name: str) -> bool:
