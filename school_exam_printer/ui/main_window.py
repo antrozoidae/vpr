@@ -72,8 +72,23 @@ class MainWindow(QMainWindow):
         
         layout.addWidget(self.tabs)
         
+        # Подключить сигналы для автообновления вкладок
+        self.classes_tab.classes_changed.connect(self._on_classes_changed)
+        self.subjects_tab.subjects_changed.connect(self._on_subjects_changed)
+        
         # Меню
         self._create_menu()
+    
+    def _on_classes_changed(self):
+        """Обработчик изменения классов - обновить зависимые вкладки."""
+        self.subjects_tab.refresh_all()
+        self.assignments_tab.refresh_all()
+        self.print_calc_tab.refresh_data()
+    
+    def _on_subjects_changed(self):
+        """Обработчик изменения предметов - обновить зависимые вкладки."""
+        self.assignments_tab.refresh_all()
+        self.print_calc_tab.refresh_data()
     
     def _create_menu(self):
         """Создать меню."""

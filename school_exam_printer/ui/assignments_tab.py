@@ -129,6 +129,7 @@ class AssignmentsTab(QWidget):
         self.v2_part2_edit.setText(v2_files.get("part_2", ""))
         
         # Показать/скрыть поля для части 2
+        # Теперь показываем всегда если has_two_parts=True, независимо от конкретных классов
         has_two_parts = subject.get("has_two_parts", False)
         self.v1_part2_edit.setVisible(has_two_parts)
         self.v1_part2_btn.setVisible(has_two_parts)

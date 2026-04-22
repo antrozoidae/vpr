@@ -6,11 +6,14 @@ from PyQt6.QtWidgets import (
     QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem,
     QMessageBox, QHeaderView, QSpinBox
 )
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 
 
 class ClassesTab(QWidget):
     """Вкладка для управления классами."""
+    
+    # Сигнал об изменении данных классов
+    classes_changed = pyqtSignal()
     
     def __init__(self, config, parent=None):
         super().__init__(parent)
@@ -95,6 +98,7 @@ class ClassesTab(QWidget):
         try:
             self.config.add_class(parallel, letter, students)
             self._refresh_table()
+            self.classes_changed.emit()  # Уведомить об изменении
             QMessageBox.information(self, "Успех", f"Класс {parallel}{letter} добавлен")
         except ValueError as e:
             QMessageBox.critical(self, "Ошибка", str(e))
@@ -110,6 +114,7 @@ class ClassesTab(QWidget):
         if reply == QMessageBox.StandardButton.Yes:
             self.config.remove_class(parallel, letter)
             self._refresh_table()
+            self.classes_changed.emit()  # Уведомить об изменении
     
     def get_data(self):
         """Получить данные о классах."""

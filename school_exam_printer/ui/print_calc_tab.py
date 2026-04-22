@@ -331,3 +331,11 @@ class PrintCalcTab(QWidget):
         from datetime import datetime
         timestamp = datetime.now().strftime("%H:%M:%S")
         self.log_text.append(f"[{timestamp}] {msg}")
+    
+    def refresh_data(self):
+        """Обновить данные (вызывается при изменении классов/предметов)."""
+        # Сбросить таблицу и кнопку печати если данные изменились
+        if self.table.rowCount() > 0:
+            self.table.setRowCount(0)
+            self.print_btn.setEnabled(False)
+            self.log_message("Данные обновлены. Нажмите 'Рассчитать' для пересчёта")

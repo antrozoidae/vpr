@@ -69,6 +69,7 @@ class CalculationEngine:
     ) -> List[PrintJob]:
         """
         Рассчитать все задания на печать для предмета.
+        Поддерживает разные структуры заданий для разных классов (две части / одна часть).
         """
         jobs = []
         subject = self.config.get_subject(subject_name)
@@ -76,8 +77,51 @@ class CalculationEngine:
         if not subject:
             return jobs
         
-        # Получить общее количество учеников для целевых классов
-        total_students = self.config.get_total_students(subject["target_classes"])
+        # Проверка: есть ли классы с разными структурами (две части vs одна часть)
+        has_two_parts = subject.get("has_two_parts", False)
+        two_parts_classes = subject.get("two_parts_classes", []) if has_two_parts else []
+        
+        if has_two_parts and two_parts_classes:
+            # Разделить классы на две группы: с двумя частями и с одной частью
+            classes_with_two_parts = [c for c in subject["target_classes"] if c in two_parts_classes]
+            classes_with_one_part = [c for c in subject["target_classes"] if c not in two_parts_classes]
+            
+            # Обработать классы с двумя частями
+            if classes_with_two_parts:
+                jobs.extend(self._calculate_jobs_for_class_group(
+                    subject_name, subject, classes_with_two_parts,
+                    enabled_printers, duplex_mode, has_two_parts=True
+                ))
+            
+            # Обработать классы с одной частью
+            if classes_with_one_part:
+                jobs.extend(self._calculate_jobs_for_class_group(
+                    subject_name, subject, classes_with_one_part,
+                    enabled_printers, duplex_mode, has_two_parts=False
+                ))
+        else:
+            # Все классы имеют одинаковую структуру
+            jobs.extend(self._calculate_jobs_for_class_group(
+                subject_name, subject, subject["target_classes"],
+                enabled_printers, duplex_mode, has_two_parts=has_two_parts
+            ))
+        
+        return jobs
+    
+    def _calculate_jobs_for_class_group(
+        self,
+        subject_name: str,
+        subject: Dict[str, Any],
+        class_ids: List[str],
+        enabled_printers: List[str],
+        duplex_mode: str,
+        has_two_parts: bool
+    ) -> List[PrintJob]:
+        """Рассчитать задания для группы классов с одинаковой структурой."""
+        jobs = []
+        
+        # Получить общее количество учеников для этой группы классов
+        total_students = self.config.get_total_students(class_ids)
         
         if total_students == 0 or not enabled_printers:
             return jobs
@@ -95,7 +139,7 @@ class CalculationEngine:
                 continue
             
             # Получить путь к файлу
-            file_path = self._get_file_path(subject, variant_key)
+            file_path = self._get_file_path(subject, variant_key, has_two_parts)
             
             if not file_path:
                 continue
@@ -115,12 +159,12 @@ class CalculationEngine:
         
         return jobs
     
-    def _get_file_path(self, subject: Dict[str, Any], variant_key: str) -> str:
+    def _get_file_path(self, subject: Dict[str, Any], variant_key: str, has_two_parts: bool) -> str:
         """Получить путь к файлу для варианта."""
         files = subject.get("files", {})
         variant_data = files.get(variant_key, {})
         
-        if subject.get("has_two_parts", False):
+        if has_two_parts:
             # Если две части, нужна склейка - возвращаем пустую строку
             # Фактический путь будет определён после склейки
             part1 = variant_data.get("part_1", "")
