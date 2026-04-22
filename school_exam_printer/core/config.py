@@ -86,7 +86,7 @@ class Config:
                 total += cls["students"]
         return total
     
-    def add_subject(self, name: str, target_classes: List[str], has_two_parts: bool = False):
+    def add_subject(self, name: str, target_classes: List[str], has_two_parts: bool = False, two_parts_classes: Optional[List[str]] = None):
         """Добавить предмет."""
         for subj in self.subjects:
             if subj["name"] == name:
@@ -96,6 +96,7 @@ class Config:
             "name": name,
             "target_classes": target_classes,
             "has_two_parts": has_two_parts,
+            "two_parts_classes": two_parts_classes or [],  # Классы с двумя частями
             "files": {
                 "variant_1": {"part_1": "", "part_2": ""},
                 "variant_2": {"part_1": "", "part_2": ""}
