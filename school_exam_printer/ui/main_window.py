@@ -14,12 +14,12 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QIcon, QAction
 
-from ..core.config import AppConfig
-from .tabs.classes_tab import ClassesTab
-from .tabs.subjects_tab import SubjectsTab
-from .tabs.printers_tab import PrintersTab
-from .tabs.assignments_tab import AssignmentsTab
-from .tabs.print_tab import PrintTab
+from core.config import AppConfig
+from ui.tabs.classes_tab import ClassesTab
+from ui.tabs.subjects_tab import SubjectsTab
+from ui.tabs.printers_tab import PrintersTab
+from ui.tabs.assignments_tab import AssignmentsTab
+from ui.tabs.print_tab import PrintTab
 
 
 class MainWindow(QMainWindow):

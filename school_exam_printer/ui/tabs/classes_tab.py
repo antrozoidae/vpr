@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 
-from ...core.config import AppConfig
+from core.config import AppConfig
 
 
 class ClassesTab(QWidget):
