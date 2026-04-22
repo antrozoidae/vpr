@@ -84,6 +84,8 @@ class MainWindow(QMainWindow):
         self.subjects_tab.refresh_all()
         self.assignments_tab.refresh_all()
         self.print_calc_tab.refresh_data()
+        # Обновить subjects_tab после refresh_all для корректного отображения двух частей
+        self.subjects_tab._refresh_table()
     
     def _on_subjects_changed(self):
         """Обработчик изменения предметов - обновить зависимые вкладки."""
