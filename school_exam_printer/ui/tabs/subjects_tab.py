@@ -5,7 +5,7 @@
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QTableWidget, QTableWidgetItem,
     QPushButton, QLabel, QListWidget, QListWidgetItem, QMessageBox, 
-    QHeaderView, QCheckBox, QLineEdit, QSplitter
+    QHeaderView, QCheckBox, QLineEdit, QSplitter, QInputDialog
 )
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
@@ -320,7 +320,7 @@ class SubjectsTab(QWidget):
     
     def _add_subject(self) -> None:
         """Добавить предмет"""
-        name, ok = QLineEdit.getText(self, "Новый предмет", "Введите название предмета:")
+        name, ok = QInputDialog.getText(self, "Новый предмет", "Введите название предмета:")
         
         if ok and name.strip():
             name = name.strip()
