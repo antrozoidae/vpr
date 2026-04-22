@@ -147,46 +147,85 @@ class SubjectsTab(QWidget):
         self.classes_list.itemSelectionChanged.connect(self._update_two_parts_button_state)
     
     def _open_two_parts_dialog(self):
-        """Открыть диалог выбора классов для 2 частей."""
-        # Получить текущие выбранные классы
-        selected_items = self.classes_list.selectedItems()
-        if not selected_items:
+        """Открыть диалог выбора параллелей для 2 частей."""
+        subject_name = self.subject_combo.currentText()
+        if not subject_name:
             QMessageBox.warning(
                 self, "Внимание",
-                "Сначала выберите классы в списке выше."
+                "Сначала выберите предмет"
             )
             return
         
-        target_classes = [item.text() for item in selected_items]
+        subject_data = self.data_manager.get_subject(subject_name)
+        if not subject_data:
+            return
         
-        # Получить текущий список классов с 2 частями (для существующих предметов)
-        # Для нового предмета пока пусто
-        current_two_parts = []
-        
-        dialog = TwoPartsDialog(target_classes, current_two_parts, self)
-        if dialog.exec() == QDialog.DialogCode.Accepted:
-            new_two_parts = dialog.get_selected_classes()
-            # Сохраняем во временное свойство для использования при добавлении
-            self._pending_two_parts = new_two_parts
-            self._update_two_parts_label(new_two_parts, target_classes)
-    
-    def _update_two_parts_label(self, two_parts_classes: list, target_classes: list):
-        """Обновить метку с информацией о 2 частях."""
+        # Получить выбранные классы предмета
+        target_classes = subject_data.get('target_classes', [])
         if not target_classes:
-            self.lbl_two_parts_info.setText("Классы не выбраны")
-            return
-            
-        if not two_parts_classes:
-            self.lbl_two_parts_info.setText("Все выбранные классы: 1 часть")
-            self.lbl_two_parts_info.setStyleSheet("color: gray; font-style: italic;")
-        elif len(two_parts_classes) == len(target_classes):
-            self.lbl_two_parts_info.setText("Все выбранные классы: 2 части")
-            self.lbl_two_parts_info.setStyleSheet("color: green; font-weight: bold;")
-        else:
-            count = len(two_parts_classes)
-            self.lbl_two_parts_info.setText(
-                f"2 части для {count} из {len(target_classes)} классов"
+            QMessageBox.information(
+                self, "Инфо",
+                "Для этого предмета не выбрано ни одного класса."
             )
+            return
+        
+        # Получить уникальные параллели из выбранных классов
+        available_parallels = set()
+        for cls in self.data_manager.get_classes():
+            class_id = f"{cls['parallel']}{cls['letter']}"
+            if class_id in target_classes:
+                available_parallels.add(cls['parallel'])
+        
+        if not available_parallels:
+            QMessageBox.information(
+                self, "Инфо",
+                "Не удалось определить параллели для выбранных классов."
+            )
+            return
+        
+        sorted_parallels = sorted(list(available_parallels))
+        
+        # Текущий выбор параллелей с 2 частями
+        current_two_parts = subject_data.get('two_parts_parallels', [])
+        
+        dialog = QDialog(self)
+        dialog.setWindowTitle(f"Настройка 2-х частей для '{subject_name}'")
+        dialog.setMinimumWidth(300)
+        
+        layout = QVBoxLayout(dialog)
+        layout.addWidget(QLabel(
+            "Выберите параллели, для которых задание состоит из 2-х частей:"
+        ))
+        
+        checkboxes = {}
+        for p in sorted_parallels:
+            cb = QCheckBox(f"{p} классы")
+            cb.setChecked(p in current_two_parts)
+            checkboxes[p] = cb
+            layout.addWidget(cb)
+        
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | 
+            QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.accepted.connect(dialog.accept)
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
+        
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            new_selection = [p for p, cb in checkboxes.items() if cb.isChecked()]
+            self.data_manager.update_subject_two_parts_parallels(subject_name, new_selection)
+            self._update_two_parts_label(new_selection)
+            self.data_changed.emit()
+    
+    def _update_two_parts_label(self, two_parts_parallels: list):
+        """Обновить метку с информацией о 2 частях."""
+        if not two_parts_parallels:
+            self.lbl_two_parts_info.setText("Все классы: 1 часть")
+            self.lbl_two_parts_info.setStyleSheet("color: gray; font-style: italic;")
+        else:
+            parallels_str = ", ".join(map(str, sorted(two_parts_parallels)))
+            self.lbl_two_parts_info.setText(f"2 части для {parallels_str} классов")
             self.lbl_two_parts_info.setStyleSheet("color: blue; font-weight: bold;")
     
     def _refresh_table(self):
@@ -202,10 +241,11 @@ class SubjectsTab(QWidget):
             classes_str = ", ".join(subject["target_classes"])
             self.table.setItem(row, 1, QTableWidgetItem(classes_str))
             
-            # Отобразить информацию о двух частях
-            two_parts_classes = subject.get("two_parts_classes", [])
-            if two_parts_classes:
-                two_parts_str = f"Да ({', '.join(two_parts_classes)})"
+            # Отобразить информацию о двух частях (параллели)
+            two_parts_parallels = subject.get("two_parts_parallels", [])
+            if two_parts_parallels:
+                parallels_str = ", ".join(map(str, sorted(two_parts_parallels)))
+                two_parts_str = f"Да ({parallels_str} кл.)"
             else:
                 two_parts_str = "Нет"
             self.table.setItem(row, 2, QTableWidgetItem(two_parts_str))

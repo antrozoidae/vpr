@@ -69,7 +69,7 @@ class CalculationEngine:
     ) -> List[PrintJob]:
         """
         Рассчитать все задания на печать для предмета.
-        Поддерживает разные структуры заданий для разных классов (две части / одна часть).
+        Поддерживает разные структуры заданий для разных параллелей (две части / одна часть).
         """
         jobs = []
         subject = self.config.get_subject(subject_name)
@@ -77,14 +77,22 @@ class CalculationEngine:
         if not subject:
             return jobs
         
-        # Проверка: есть ли классы с разными структурами (две части vs одна часть)
-        has_two_parts = subject.get("has_two_parts", False)
-        two_parts_classes = subject.get("two_parts_classes", []) if has_two_parts else []
+        # Проверка: есть ли выбранные параллели с двумя частями
+        two_parts_parallels = subject.get("two_parts_parallels", [])
         
-        if has_two_parts and two_parts_classes:
-            # Разделить классы на две группы: с двумя частями и с одной частью
-            classes_with_two_parts = [c for c in subject["target_classes"] if c in two_parts_classes]
-            classes_with_one_part = [c for c in subject["target_classes"] if c not in two_parts_classes]
+        if two_parts_parallels:
+            # Разделить классы на две группы: по параллелям
+            classes_with_two_parts = []
+            classes_with_one_part = []
+            
+            for class_id in subject["target_classes"]:
+                # Извлечь параллель из class_id (например, "5A" -> 5)
+                parallel = int(''.join(filter(str.isdigit, class_id)))
+                
+                if parallel in two_parts_parallels:
+                    classes_with_two_parts.append(class_id)
+                else:
+                    classes_with_one_part.append(class_id)
             
             # Обработать классы с двумя частями
             if classes_with_two_parts:
@@ -100,7 +108,8 @@ class CalculationEngine:
                     enabled_printers, duplex_mode, has_two_parts=False
                 ))
         else:
-            # Все классы имеют одинаковую структуру
+            # Все классы имеют одинаковую структуру (определяется флагом has_two_parts)
+            has_two_parts = subject.get("has_two_parts", False)
             jobs.extend(self._calculate_jobs_for_class_group(
                 subject_name, subject, subject["target_classes"],
                 enabled_printers, duplex_mode, has_two_parts=has_two_parts

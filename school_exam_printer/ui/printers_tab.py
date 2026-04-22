@@ -113,11 +113,13 @@ class PrintersTab(QWidget):
         """Синхронизировать конфигурацию с текущими принтерами."""
         current_names = {p["name"] for p in printers}
         
-        # Добавить новые принтеры
+        # Добавить новые принтеры (только если их еще нет в конфиге)
         for printer_info in printers:
-            self.config.add_printer(printer_info["name"], False)
+            exists = any(p["name"] == printer_info["name"] for p in self.config.printers)
+            if not exists:
+                self.config.add_printer(printer_info["name"], False)
         
-        # Удалить несуществующие (опционально)
+        # Удалить несуществующие из конфига (опционально, закомментировано)
         # self.config.printers = [p for p in self.config.printers if p["name"] in current_names]
     
     def _toggle_printer(self, name: str, enabled: bool):

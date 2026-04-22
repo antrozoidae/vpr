@@ -96,12 +96,20 @@ class Config:
             "name": name,
             "target_classes": target_classes,
             "has_two_parts": has_two_parts,
-            "two_parts_classes": two_parts_classes or [],  # Классы с двумя частями
+            "two_parts_classes": two_parts_classes or [],  # Классы с двумя частями (устаревшее)
+            "two_parts_parallels": [],  # Параллели с двумя частями (новое)
             "files": {
                 "variant_1": {"part_1": "", "part_2": ""},
                 "variant_2": {"part_1": "", "part_2": ""}
             }
         })
+    
+    def update_subject_two_parts_parallels(self, name: str, parallels: List[int]):
+        """Обновить список параллелей с двумя частями для предмета."""
+        subject = self.get_subject(name)
+        if not subject:
+            raise ValueError(f"Предмет '{name}' не найден")
+        subject["two_parts_parallels"] = parallels
     
     def remove_subject(self, name: str):
         """Удалить предмет."""

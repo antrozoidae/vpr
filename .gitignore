@@ -1,3 +1,37 @@
 ```
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs
 *.log
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Dependencies
+.venv/
+venv/
+pip-log.txt
+pip-selfcheck.json
+
+# Coverage
+.coverage
+htmlcov/
+.coverage.*
+.nox/
+
+# Testing
+.pytest_cache/
+.hypothesis/
+
+# Build
+build/
+dist/
+*.egg
+*.egg-info/
 ```
