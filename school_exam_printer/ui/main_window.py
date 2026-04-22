@@ -8,11 +8,11 @@ from typing import Optional
 
 from PyQt6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QTabWidget, 
-    QMenuBar, QMenu, QAction, QMessageBox, QFileDialog,
+    QMenuBar, QMenu, QMessageBox, QFileDialog,
     QApplication, QToolBar, QLabel, QStatusBar
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QAction
 
 from ..core.config import AppConfig
 from .tabs.classes_tab import ClassesTab
